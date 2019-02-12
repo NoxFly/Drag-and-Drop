@@ -1,9 +1,39 @@
-class Pattern {
-    constructor(name, color, width, height, background) {
+/**
+ * COPYRIGHT NOXFLY 2019
+ * SVG LIB
+ * 
+ * svg = new SVG(class name, width, height, background)
+ * 
+ * draw() :     display the svg on the screen
+ * 
+ * line() :     create <line> element
+ *      --> x1, y1, x2, y2, stroke color, stroke width
+ * 
+ * polyline :   create <polyline> element
+ *      --> array[] of coordonates, background color (hex or rgb/rgba), stroke color, stroke width
+ * 
+ * circle :     create <circle> element
+ *      --> x, y, r, background, stroke color, stroke width
+ * 
+ * ellipse :    create <ellipse> element
+ *      --> x, y, rx, ry, background, stroke color, stroke width
+ * 
+ * arc :        create <path> element but for an arc result
+ *      --> x, y, r, start anglen end angle, background, stroke color, stroke width
+ * 
+ * path:        create <path> element
+ *      --> d, background, stroke color, stroke width
+ * 
+ * 
+ */
+
+
+
+class SVG {
+    constructor(name, width, height, background) {
         this.width = width || "100%";
         this.height = height || "100%";
         this.background = background || "transparent";
-        this.color = color || "#222";
         this.data = [];
         this.name = name;
 
