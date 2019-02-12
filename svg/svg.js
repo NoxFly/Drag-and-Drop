@@ -1,0 +1,194 @@
+class Pattern {
+    constructor(name, color, width, height, background) {
+        this.width = width || "100%";
+        this.height = height || "100%";
+        this.background = background || "transparent";
+        this.color = color || "#222";
+        this.data = [];
+        this.name = name;
+
+        $("#container").append("<svg class='"+name+"'></svg>");
+    }
+
+    draw() {
+        $("."+this.name).html('');
+        for(let i in this.data) {
+            i = this.data[i];
+            let newEl = document.createElementNS('http://www.w3.org/2000/svg', i.type);
+                newEl.setAttribute('stroke', i.strokeColor);
+                newEl.setAttribute('stroke-width', i.strokeWidth+"px");
+                newEl.setAttribute('fill', i.background);
+            switch(i.type) {
+                case "line":
+                    newEl = this.createLine(newEl, i);
+                    break;
+                case "polyline":
+                    newEl = this.createPolyline(newEl, i);
+                    break;
+                case "circle":
+                    newEl = this.createCircle(newEl, i);
+                    break;
+                case "ellipse":
+                    newEl = this.createEllipse(newEl, i);
+                    break;
+                case "path":
+                    newEl = this.createArc(newEl, i);
+                    break;
+            }
+            
+            $("."+this.name).append(newEl);
+        }
+    }
+
+    line(x1, y1, x2, y2, color, size) {
+        x1 = x1 || 0;   y1 = y1 || 0;
+        x2 = x2 || 0;   y2 = y2 || 0;
+        color = color || "none";
+        size = size || 1;
+        
+        this.data.push({
+            type: "line",
+            coord: [x1,y1,x2,y2],
+            color: color,
+            size: size
+        });
+    }
+
+    polyline(coords, bg, strokeColor, strokeWidth) {
+        coords = coords || [];
+        bg = bg || "none";
+        strokeColor = strokeColor || "none";
+        strokeWidth = strokeWidth || 1;
+        
+        this.data.push({
+            type: "polyline",
+            coord: coords,
+            background: bg,
+            strokeColor: strokeColor,
+            strokeWidth: strokeWidth
+        });
+    }
+
+    circle(x, y, r, bg, strokeColor, strokeWidth) {
+        x = x || 0; y = y || 0; r = r || 0;
+        bg = bg || "none";
+        strokeColor = strokeColor || "none";
+        strokeWidth = strokeWidth || 1;
+
+        this.data.push({
+            type: "circle",
+            x: x,
+            y: y,
+            r: r,
+            background: bg,
+            strokeColor: strokeColor,
+            strokeWidth: strokeWidth
+        });
+    }
+
+    ellipse(x, y, rx, ry, bg, strokeColor, strokeWidth) {
+        x = x || 0; rx = rx || 0;
+        y = y || 0; ry = ry || 0;
+        bg = bg || "none";
+        strokeColor = strokeColor || "none";
+        strokeWidth = strokeWidth || 1;
+        this.data.push({
+            type: "ellipse",
+            x: x,
+            y: y,
+            rx: rx,
+            ry: ry,
+            background: bg,
+            strokeColor: strokeColor,
+            strokeWidth: strokeWidth
+        });
+    }
+
+    arc(x, y, r, startAngle, endAngle, bg, strokeColor, strokeWidth) {
+        x = x || 0; y = y || 0;
+        startAngle = startAngle || 0;
+        endAngle = endAngle || 0;
+        bg = bg || "none";
+        strokeColor = strokeColor || "none";
+        strokeWidth = strokeWidth || 1;
+
+        let start = {
+            x: x + (r * Math.cos((endAngle-90) * Math.PI / 180.0)),
+            y: y + (r * Math.cos((endAngle-90) * Math.PI / 180.0))
+        };
+
+        let end = {
+            x: x + (r * Math.cos((startAngle-90) * Math.PI / 180.0)),
+            y: y + (r * Math.cos((startAngle-90) * Math.PI / 180.0))
+        };
+
+        let arc = endAngle - startAngle <= 180 ? "0" : "1";
+
+        let d = [
+            "M", start.x, start.y,
+            "A", r, r, 0, arc, 0, end.x, end.y
+        ].join(" ");
+
+        this.data.push({
+            type: "path",
+            d: d,
+            background: bg,
+            strokeColor: strokeColor,
+            strokeWidth: strokeWidth
+        });
+    }
+
+    path(d, bg, strokeColor, strokeWidth) {
+        d = d || "";
+        bg = bg || "none";
+        strokeColor = strokeColor || "none";
+        strokeWidth = strokeWidth || 1;
+
+        this.data.push({
+            type: "path",
+            d: d,
+            background: bg,
+            strokeColor: strokeColor,
+            strokeWidth: strokeWidth
+        });
+    }
+
+    createLine(n, el) {
+            n.setAttribute('x1', el.coord[0]);
+            n.setAttribute('y1', el.coord[1]);
+            n.setAttribute('x2', el.coord[2]);
+            n.setAttribute('y2', el.coord[3]);
+        return n;
+    }
+
+    createPolyline(n, el) {
+        let points = "";
+        for(let i in el.coord) {
+            points += el.coord[i][0]+","+el.coord[i][1];
+            if(i<el.coord.length-1) points += " ";
+        }
+
+        n.setAttribute('points', points);
+        return n;
+    }
+
+    createCircle(n, el) {
+        n.setAttribute('cx', el.x);
+        n.setAttribute('cy', el.y);
+        n.setAttribute('r', el.r);
+        return n;
+    }
+
+    createEllipse(n, el) {
+        n.setAttribute('cx', el.x);
+        n.setAttribute('cy', el.y);
+        n.setAttribute('rx', el.rx);
+        n.setAttribute('ry', el.ry);            
+        return n;
+    }
+
+    createArc(n, el) {
+        n.setAttribute('d', el.d);
+        return n;
+    }
+}
