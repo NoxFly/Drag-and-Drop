@@ -23,7 +23,7 @@
  * arc()        :       create <path> element but for an arc result
  *      --> x, y, r, start anglen end angle, background, stroke color, stroke width
  * 
- * path()       :       create <path> element
+ * path()       :   create <path> element
  *      --> d, background, stroke color, stroke width
  * 
  * 
@@ -38,18 +38,15 @@ class SVG {
         this.background = background || "transparent";
         this.data = [];
         this.name = name;
-
-        $("#container").append("<svg class='"+name+"'></svg>");
+        this.type = "svg";
+        document.body.innerHTML += "<svg class='"+name+"'></svg>";
     }
 
     draw() {
-        $("."+this.name).html('');
+        document.querySelector("."+this.name).innerHTML = "";
         for(let i in this.data) {
             i = this.data[i];
-            let newEl = document.createElementNS('http://www.w3.org/2000/svg', i.type);
-                newEl.setAttribute('stroke', i.strokeColor);
-                newEl.setAttribute('stroke-width', i.strokeWidth+"px");
-                newEl.setAttribute('fill', i.background);
+            let newEl = "<"+i.type+" stroke='"+i.strokeColor+"' stroke-width='"+i.strokeWidth+"' fill='"+i.background+"' ";
             switch(i.type) {
                 case "line":
                     newEl = this.createLine(newEl, i);
@@ -67,8 +64,8 @@ class SVG {
                     newEl = this.createArc(newEl, i);
                     break;
             }
-            
-            $("."+this.name).append(newEl);
+            newEl += "/>";
+            document.querySelector("."+this.name).innerHTML += newEl;
         }
     }
 
@@ -186,10 +183,7 @@ class SVG {
     }
 
     createLine(n, el) {
-            n.setAttribute('x1', el.coord[0]);
-            n.setAttribute('y1', el.coord[1]);
-            n.setAttribute('x2', el.coord[2]);
-            n.setAttribute('y2', el.coord[3]);
+        n += "x1='"+el.coord[0]+"' y1='"+el.coord[1]+"' x2='"+el.coord[2]+"' y2='"+el.coord[3]+"'";
         return n;
     }
 
@@ -200,27 +194,22 @@ class SVG {
             if(i<el.coord.length-1) points += " ";
         }
 
-        n.setAttribute('points', points);
+        n += "points='"+ points+"'";
         return n;
     }
 
     createCircle(n, el) {
-        n.setAttribute('cx', el.x);
-        n.setAttribute('cy', el.y);
-        n.setAttribute('r', el.r);
+        n += "cx='"+el.x+"' cy='"+el.y+"' r='"+el.r+"'";
         return n;
     }
 
     createEllipse(n, el) {
-        n.setAttribute('cx', el.x);
-        n.setAttribute('cy', el.y);
-        n.setAttribute('rx', el.rx);
-        n.setAttribute('ry', el.ry);            
+        n += "cx='"+el.x+"' cy='"+el.y+"' rx='"+el.rx+"' ry='"+el.ry+"'";          
         return n;
     }
 
     createArc(n, el) {
-        n.setAttribute('d', el.d);
+        n += "d='"+el.d+"'";
         return n;
     }
 }
