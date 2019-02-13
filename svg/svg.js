@@ -6,24 +6,24 @@
  * 
  * svg = new SVG(class name, width, height, background)
  * 
- * draw() :     display the svg on the screen
+ * draw()       :       display the svg on the screen
  * 
- * line() :     create <line> element
+ * line()       :       create <line> element
  *      --> x1, y1, x2, y2, stroke color, stroke width
  * 
- * polyline :   create <polyline> element
+ * polyline()   :       create <polyline> element
  *      --> array[] of coordonates, background color (hex or rgb/rgba), stroke color, stroke width
  * 
- * circle :     create <circle> element
+ * circle()     :       create <circle> element
  *      --> x, y, r, background, stroke color, stroke width
  * 
- * ellipse :    create <ellipse> element
+ * ellipse()    :       create <ellipse> element
  *      --> x, y, rx, ry, background, stroke color, stroke width
  * 
- * arc :        create <path> element but for an arc result
+ * arc()        :       create <path> element but for an arc result
  *      --> x, y, r, start anglen end angle, background, stroke color, stroke width
  * 
- * path:        create <path> element
+ * path()       :       create <path> element
  *      --> d, background, stroke color, stroke width
  * 
  * 
