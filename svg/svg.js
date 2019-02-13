@@ -2,6 +2,8 @@
  * COPYRIGHT NOXFLY 2019
  * SVG LIB
  * 
+ * link: cdn.jsdelivr.net/gh/NoxFly/tools@master/svg/svg.js
+ * 
  * svg = new SVG(class name, width, height, background)
  * 
  * draw() :     display the svg on the screen
