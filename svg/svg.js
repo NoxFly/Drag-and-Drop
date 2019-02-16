@@ -4,6 +4,8 @@
  * 
  * link: cdn.jsdelivr.net/gh/NoxFly/tools@master/svg/svg.js
  * 
+ * 
+ * 
  * svg = new SVG(class name, width, height, background)
  * 
  * draw()       :       display the svg on the screen
@@ -26,10 +28,29 @@
  * path()       :   create <path> element
  *      --> d, background, stroke color, stroke width
  * 
+ * image()      :       create <image> element
+ *      --> URL, width, height, x, y
+ * 
+ * text()       :       create <text> element
+ *      --> text, x, y, font size
+ * 
+ * hide()       :       hide the SVG or an element of, without transition
+ *      --> without argument, hide the SGV, else hide the element of the SVG
+ *              --> svg.hide()
+ *              --> svg.hide(myCircle1)
+ * 
+ * show()       :       inverse of the hide method
+ *      --> without argument, show the SGV, else show the element of the SVG
+ *              --> svg.show()
+ *              --> svg.show(myCircle1)
+ * 
+ * opacity()    :   change element's opacity
+ *      --> first argument = opacity value, second is optional, it can be a SVG element
+ *              --> svg.opacity(0.5)
+ *              --> svg.opacity(0.5, myCircle1)
+ * 
  * 
  */
-
-
 
 class SVG {
     constructor(name, width, height, background) {
@@ -39,33 +60,84 @@ class SVG {
         this.data = [];
         this.name = name;
         this.type = "svg";
-        document.body.innerHTML += "<svg class='"+name+"'></svg>";
+        this.index = 0;
+        this.xmlns = "http://www.w3.org/2000/svg";
+        
+        let elSVG = document.createElementNS(this.xmlns, "svg");
+        document.body.appendChild(elSVG);
+
+        elSVG.setAttribute("class", name);
+        Object.assign(elSVG.style, {
+            width: width,
+            height: height,
+            background: background,
+            display: "inline-block"
+        });
     }
 
     draw() {
-        document.querySelector("."+this.name).innerHTML = "";
+        document.getElementsByClassName(this.name).innerHTML = "";
         for(let i in this.data) {
             i = this.data[i];
-            let newEl = "<"+i.type+" stroke='"+i.strokeColor+"' stroke-width='"+i.strokeWidth+"' fill='"+i.background+"' ";
+            let newEl = document.createElementNS(this.xmlns, i.type);
+            document.getElementsByClassName(this.name)[0].appendChild(newEl);
+
+            newEl.setAttribute("class", "s"+i.id);
+            Object.assign(newEl.style, {
+                display: "inline-block",
+                stroke: i.strokeColor,
+                strokeWidth: i.strokeWidth,
+                fill: i.background
+            });
+
             switch(i.type) {
                 case "line":
-                    newEl = this.createLine(newEl, i);
+                    setAttributes(newEL, {
+                        "x1": i.coord[0],
+                        "y1": i.coord[1],
+                        "x2": i.coord[2],
+                        "y2": i.coord[3]
+                    });
                     break;
                 case "polyline":
-                    newEl = this.createPolyline(newEl, i);
+                    newEl.setAttributeNS(null, "points", this.createPolyline(i));
                     break;
                 case "circle":
-                    newEl = this.createCircle(newEl, i);
+                    setAttributes(newEl, {
+                        "cx": i.x,
+                        "cy": i.y,
+                        "r": i.r
+                    });
                     break;
                 case "ellipse":
-                    newEl = this.createEllipse(newEl, i);
+                    setAttributes(newEl, {
+                        "x": i.x,
+                        "y": i.y,
+                        "rx": i.rx,
+                        "ry": i.ry
+                    });
                     break;
                 case "path":
-                    newEl = this.createArc(newEl, i);
+                    newEl.setAttributeNS(null, "d", this.createPath(i));
+                    break;
+                case "text":
+                    setAttributes(newEl, {
+                        "x": i.x,
+                        "y": i.y,
+                        "font-size": i.fontSize
+                    });
+                    newEl.appendChild(document.createTextNode(i.text));
+                    break;
+                case "image":
+                    setAttributes(newEl, {
+                       "x": i.x,
+                       "y": i.y,
+                       "width": i.width,
+                       "height": i.height,
+                       "href": i.imageUrl 
+                    });
                     break;
             }
-            newEl += "/>";
-            document.querySelector("."+this.name).innerHTML += newEl;
         }
     }
 
@@ -79,8 +151,10 @@ class SVG {
             type: "line",
             coord: [x1,y1,x2,y2],
             color: color,
-            size: size
+            size: size,
+            id: this.index++
         });
+        return this.data[this.index-1];
     }
 
     polyline(coords, bg, strokeColor, strokeWidth) {
@@ -94,8 +168,10 @@ class SVG {
             coord: coords,
             background: bg,
             strokeColor: strokeColor,
-            strokeWidth: strokeWidth
+            strokeWidth: strokeWidth,
+            id: this.index++
         });
+        return this.data[this.index-1];
     }
 
     circle(x, y, r, bg, strokeColor, strokeWidth) {
@@ -111,8 +187,10 @@ class SVG {
             r: r,
             background: bg,
             strokeColor: strokeColor,
-            strokeWidth: strokeWidth
+            strokeWidth: strokeWidth,
+            id: this.index++
         });
+        return this.data[this.index-1];
     }
 
     ellipse(x, y, rx, ry, bg, strokeColor, strokeWidth) {
@@ -129,8 +207,10 @@ class SVG {
             ry: ry,
             background: bg,
             strokeColor: strokeColor,
-            strokeWidth: strokeWidth
+            strokeWidth: strokeWidth,
+            id: this.index++
         });
+        return this.data[this.index-1];
     }
 
     arc(x, y, r, startAngle, endAngle, bg, strokeColor, strokeWidth) {
@@ -163,8 +243,10 @@ class SVG {
             d: d,
             background: bg,
             strokeColor: strokeColor,
-            strokeWidth: strokeWidth
+            strokeWidth: strokeWidth,
+            id: this.index
         });
+        return this.data[this.index-1];
     }
 
     path(d, bg, strokeColor, strokeWidth) {
@@ -178,38 +260,103 @@ class SVG {
             d: d,
             background: bg,
             strokeColor: strokeColor,
-            strokeWidth: strokeWidth
+            strokeWidth: strokeWidth,
+            id: this.index++
         });
+        return this.data[this.index-1];
     }
 
-    createLine(n, el) {
-        n += "x1='"+el.coord[0]+"' y1='"+el.coord[1]+"' x2='"+el.coord[2]+"' y2='"+el.coord[3]+"'";
-        return n;
+    image(url, width, height, x, y) {
+        url = url || "";
+        width = width || 0; height = height || 0;
+        x = x || 0; y = y || 0;
+
+        var http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send();
+        
+        if(http.status == 404) console.error("Image URL not valid: "+url);
+        else {
+            this.data.push({
+                type: "image",
+                imageUrl: url,
+                x: x,
+                y: y,
+                width: width,
+                height: height,
+                id: this.index++
+            });
+            return this.data[this.index-1];
+        }
     }
 
-    createPolyline(n, el) {
+    text(t, x, y, size) {
+        t = t || ""; size = size || "1em";
+        x = x || 0; y = y || 0;
+        this.data.push({
+            type: "text",
+            x: x,
+            y: y,
+            fontSize: size,
+            text: t,
+            id: this.index++
+        });
+        return this.data[this.index-1];
+    }
+
+    remove(el) {
+        if(el) {
+            this.data.splice(el.id, 1);
+        } else {
+            this.data = [];
+        }
+        this.draw();
+    }
+
+    hide(el) {
+        if(el) {
+            document.querySelector(".s"+el.id).style.display = "none";
+        } else {
+           document.querySelector("."+this.name).style.display = "none";
+        }
+    }
+
+    show(el) {
+        if(el) {
+            document.querySelector(".s"+el.id).style.display = "block";
+        } else {
+           document.querySelector("."+this.name).style.display = "block";
+        }
+        this.draw();
+    }
+
+    opacity(alpha, el) {
+        if(isNaN(alpha)) console.warn("alpha must be a value between 0 and 1");
+        else {
+            alpha = (alpha>=0 && alpha<=1)? alpha : 1;
+            let o = el? ".s"+el.id : "."+this.name;
+            document.querySelector(o).style.opacity = alpha;
+        }
+    }
+
+    createPolyline(el) {
         let points = "";
         for(let i in el.coord) {
             points += el.coord[i][0]+","+el.coord[i][1];
             if(i<el.coord.length-1) points += " ";
         }
 
-        n += "points='"+ points+"'";
-        return n;
+        return points;
     }
 
-    createCircle(n, el) {
-        n += "cx='"+el.x+"' cy='"+el.y+"' r='"+el.r+"'";
-        return n;
+    createPath(el) {
+        let points = "d='"+el.d+"'";
+        return points;
     }
+}
 
-    createEllipse(n, el) {
-        n += "cx='"+el.x+"' cy='"+el.y+"' rx='"+el.rx+"' ry='"+el.ry+"'";          
-        return n;
-    }
-
-    createArc(n, el) {
-        n += "d='"+el.d+"'";
-        return n;
+function setAttributes(el, attrs) {
+    for(var key in attrs) {
+      el.setAttributeNS(null, key, attrs[key]);
     }
 }
