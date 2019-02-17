@@ -10,6 +10,10 @@
  * 
  * draw()       :       display the svg on the screen
  * 
+ * reset()      :       remove all data from SVG (on the screen) --> to undisplay SVG
+ * 
+ * remove()     :       remove an element from SVG data, or remove all from SVG data (but still display)
+ * 
  * line()       :       create <line> element
  *      --> x1, y1, x2, y2, stroke color, stroke width
  * 
@@ -49,6 +53,7 @@
  *              --> svg.opacity(0.5)
  *              --> svg.opacity(0.5, myCircle1)
  * 
+ * Don't move an element WHILE you didn't draw the SVG: element not existing yet
  * 
  */
 
@@ -76,9 +81,9 @@ class SVG {
     }
 
     draw() {
-        document.getElementsByClassName(this.name).innerHTML = "";
-        for(let i in this.data) {
-            i = this.data[i];
+        this.reset();
+        for(let j in this.data) {
+            i = this.data[j];
             let newEl = document.createElementNS(this.xmlns, i.type);
             document.getElementsByClassName(this.name)[0].appendChild(newEl);
 
@@ -118,7 +123,7 @@ class SVG {
                     });
                     break;
                 case "path":
-                    newEl.setAttributeNS(null, "d", this.createPath(i));
+                    newEl.setAttributeNS(null, "d", i.d);
                     break;
                 case "text":
                     setAttributes(newEl, {
@@ -139,6 +144,10 @@ class SVG {
                     break;
             }
         }
+    }
+
+    reset() {
+        if(this.name) document.getElementsByClassName(this.name)[0].innerHTML = "";
     }
 
     line(x1, y1, x2, y2, color, size) {
@@ -314,19 +323,13 @@ class SVG {
     }
 
     hide(el) {
-        if(el) {
-            document.querySelector(".s"+el.id).style.display = "none";
-        } else {
-           document.querySelector("."+this.name).style.display = "none";
-        }
+        if(el) document.querySelector(".s"+el.id).style.display = "none";
+        else document.querySelector("."+this.name).style.display = "none";
     }
 
     show(el) {
-        if(el) {
-            document.querySelector(".s"+el.id).style.display = "block";
-        } else {
-           document.querySelector("."+this.name).style.display = "block";
-        }
+        if(el) document.querySelector(".s"+el.id).style.display = "block";
+        else document.querySelector("."+this.name).style.display = "block";
         this.draw();
     }
 
@@ -339,6 +342,34 @@ class SVG {
         }
     }
 
+    moveTo(el, x, y) {
+        let object = elementExists(el);
+        
+        if(!object) {
+            console.warn("The element to move must be an SVG element, except a path");
+            return false;
+        }
+
+        if(isNaN(x) || isNaN(y)) {
+            console.warn("Coordonates must be values");
+            return false;
+        }
+
+        if(el.type=="path") {
+            console.warn("Cannot move path for now");
+        } else if(/polyline|line/.test(el.type)) {
+            this.data[el.id].x1 = x;
+            this.data[el.id].y1 = y;
+            this.data[el.id].x2 = x + (el.x2-el.x1);
+            this.data[el.id].y2 = y + (el.y2-el.y1);
+        } else {
+            this.data[el.id].x = x;
+            this.data[el.id].y = y;
+        }
+
+        this.draw();
+    }
+
     createPolyline(el) {
         let points = "";
         for(let i in el.coord) {
@@ -348,15 +379,24 @@ class SVG {
 
         return points;
     }
-
-    createPath(el) {
-        let points = "d='"+el.d+"'";
-        return points;
-    }
 }
 
 function setAttributes(el, attrs) {
     for(var key in attrs) {
       el.setAttributeNS(null, key, attrs[key]);
     }
+}
+
+function elementExists(el) {
+    try {
+        let a = document.querySelector(".s"+el.id);
+        return a;
+    } catch(error) {
+        console.warn("This element does not exists: "+el);
+        return false;
+    }
+}
+
+function hexValue(n) {
+    return /#([0-9a-fA-F]){6}/.test(n);
 }
