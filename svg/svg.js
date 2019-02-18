@@ -83,7 +83,7 @@ class SVG {
     draw() {
         this.reset();
         for(let j in this.data) {
-            i = this.data[j];
+            let i = this.data[j];
             let newEl = document.createElementNS(this.xmlns, i.type);
             document.getElementsByClassName(this.name)[0].appendChild(newEl);
 
