@@ -171,7 +171,15 @@ class SVG {
         bg = bg || "none";
         strokeColor = strokeColor || "none";
         strokeWidth = strokeWidth || 1;
-        
+
+        if(typeof coords == 'object') {
+            if(coords[coords.length-1]===true) coords[coords.length-1] = coords[0];
+            coords = this.createPolyline(coords);
+        }
+
+        let firstCoords = coords.split(" ")[0];
+        coords = coords.replace(/z$/, " "+firstCoords);
+
         this.data.push({
             type: "polyline",
             coord: coords,
@@ -370,14 +378,32 @@ class SVG {
         this.draw();
     }
 
-    createPolyline(el) {
+    createPolyline(coord) {
         let points = "";
-        for(let i in el.coord) {
-            points += el.coord[i][0]+","+el.coord[i][1];
-            if(i<el.coord.length-1) points += " ";
+        for(let i in coord) {
+            points += coord[i][0]+","+coord[i][1];
+            if(i<coord.length-1) points += " ";
         }
 
         return points;
+    }
+
+    rect(x, y, width, height, background, strokeColor, strokeWidth) {
+        if(isNaN(x)) x = 0;
+        if(isNaN(y)) y = 0;
+        if(isNaN(width)) width = 0;
+        if(isNaN(height)) height = 0;
+
+        return this.polyline(
+            [
+                [x, y],
+                [x+width, y],
+                [x+width, y+height],
+                [x, y+height],
+                true
+            ],
+            background, strokeColor, strokeWidth
+        );
     }
 }
 
@@ -398,5 +424,5 @@ function elementExists(el) {
 }
 
 function hexValue(n) {
-    return /#([0-9a-fA-F]){6}/.test(n);
+    return /#([0-9a-fA-F]){3}/.test(n);
 }
