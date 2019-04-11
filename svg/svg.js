@@ -65,15 +65,15 @@ class SVG {
         }
 
         if(!width) {
-            this.width = document.documentElement.clientWidth+"px";
-            this.height = document.documentElement.clientHeight+"px";
+            this.width = document.documentElement.clientWidth;
+            this.height = document.documentElement.clientHeight;
         } else {
             this.width = width;
             this.height = height;
         }
         
         if(!height) {
-            this.height = "100%";
+            this.height = document.documentElement.clientHeight;
         } else {
             this.height = height;
         }
