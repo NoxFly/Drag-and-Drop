@@ -65,8 +65,8 @@ class SVG {
         }
 
         if(!width) {
-            this.width = "100%";
-            this.height = "100%";
+            this.width = document.documentElement.clientWidth+"px";
+            this.height = document.documentElement.clientHeight+"px";
         } else {
             this.width = width;
             this.height = height;
