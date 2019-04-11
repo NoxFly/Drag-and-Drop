@@ -58,10 +58,26 @@
  */
 
 class SVG {
-    constructor(name, width, height, background) {
-        this.width = width || "100%";
-        this.height = height || "100%";
-        this.background = background || "transparent";
+    constructor(name, width, height) {
+        if(!isNaN(this.name)) {
+            console.warn("The name of the SVG must be a string");
+            return false;
+        }
+
+        if(!width) {
+            this.width = "100%";
+            this.height = "100%";
+        } else {
+            this.width = width;
+            this.height = height;
+        }
+        
+        if(!height) {
+            this.height = "100%";
+        } else {
+            this.height = height;
+        }
+        
         this.data = [];
         this.name = name;
         this.type = "svg";
@@ -75,7 +91,6 @@ class SVG {
         Object.assign(elSVG.style, {
             width: width,
             height: height,
-            background: background,
             display: "inline-block"
         });
     }
@@ -105,7 +120,7 @@ class SVG {
                     });
                     break;
                 case "polyline":
-                    newEl.setAttributeNS(null, "points", this.createPolyline(i));
+                    newEl.setAttributeNS(null, "points", i.coord);
                     break;
                 case "circle":
                     setAttributes(newEl, {
@@ -175,10 +190,10 @@ class SVG {
         if(typeof coords == 'object') {
             if(coords[coords.length-1]===true) coords[coords.length-1] = coords[0];
             coords = this.createPolyline(coords);
+        } else {
+            let firstCoords = coords.split(" ")[0];
+            coords = coords.replace(/z$/, " "+firstCoords);
         }
-
-        let firstCoords = coords.split(" ")[0];
-        coords = coords.replace(/z$/, " "+firstCoords);
 
         this.data.push({
             type: "polyline",
@@ -288,23 +303,21 @@ class SVG {
         width = width || 0; height = height || 0;
         x = x || 0; y = y || 0;
 
-        var http = new XMLHttpRequest();
-        http.open('HEAD', url, false);
-        http.send();
-        
-        if(http.status == 404) console.error("Image URL not valid: "+url);
-        else {
-            this.data.push({
-                type: "image",
-                imageUrl: url,
-                x: x,
-                y: y,
-                width: width,
-                height: height,
-                id: this.index++
-            });
-            return this.data[this.index-1];
+        if(/^(https?)/.test(url)) {
+            console.alert("We don't accept online URL request");
+            return false;
         }
+
+        this.data.push({
+            type: "image",
+            imageUrl: url,
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            id: this.index++
+        });
+        return this.data[this.index-1];
     }
 
     text(t, x, y, size) {
@@ -322,11 +335,8 @@ class SVG {
     }
 
     remove(el) {
-        if(el) {
-            this.data.splice(el.id, 1);
-        } else {
-            this.data = [];
-        }
+        if(el) this.data.splice(el.id, 1);
+        else this.data = [];
         this.draw();
     }
 
@@ -350,6 +360,38 @@ class SVG {
         }
     }
 
+    fadeIn(time, el) {
+        el = elementExists(el);
+        if(!el || isNaN(time)) return false;
+        el.style.display = "block";
+        let op = 0;
+        let timer = setInterval(function() {
+            op += 0.1;
+            if(op>=1) {
+                clearInterval(timer);
+                op = 1;
+            }
+            el.style.opacity = op;
+            el.style.filter = 'alpha(opacity=' +op+ ")";
+        }, time/60);
+    }
+
+    fadeOut(time, el) {
+        el = elementExists(el);
+        if(!el || isNaN(time)) return false;
+        let op = 1;
+        let timer = setInterval(function() {
+            op -= 0.1;
+            if(op<=0.1) {
+                clearInterval(timer);
+                op = 0;
+                el.style.display = "none";
+            }
+            el.style.opacity = op;
+            el.style.filter = 'alpha(opacity=' +op+ ")";
+        }, time/60);
+    }
+
     moveTo(el, x, y) {
         let object = elementExists(el);
         
@@ -364,6 +406,8 @@ class SVG {
         }
 
         if(el.type=="path") {
+            let startX = el.d.split(" ")[0].replace(/[a-zA-Z]/,"");
+            let startY = el.d.split(" ")[1];
             console.warn("Cannot move path for now");
         } else if(/polyline|line/.test(el.type)) {
             this.data[el.id].x1 = x;
@@ -373,9 +417,30 @@ class SVG {
         } else {
             this.data[el.id].x = x;
             this.data[el.id].y = y;
+            //console.log(this.data[el.id].x)
         }
-
         this.draw();
+    }
+
+    fill(el, hex) {
+        let element = elementExists(el);
+        if(!element) return false;
+        if(!hexValue(hex)) return false;
+        element.style.fill = hex;
+    }
+
+    stroke(el, hex) {
+        let element = elementExists(el);
+        if(!element) return false;
+        if(!hexValue(hex)) return false;
+        element.style.stroke = hex;
+    }
+
+    strokeWidth(el, hex) {
+        let element = elementExists(el);
+        if(!element) return false;
+        if(!hexValue(hex)) return false;
+        element.style.strokeWidth = hex;
     }
 
     createPolyline(coord) {
@@ -424,5 +489,5 @@ function elementExists(el) {
 }
 
 function hexValue(n) {
-    return /#([0-9a-fA-F]){3}/.test(n);
+    return /#([0-9a-fA-F]){6}/.test(n);
 }
