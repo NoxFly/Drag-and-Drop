@@ -83,6 +83,7 @@ class SVG {
         this.type = "svg";
         this.index = 0;
         this.xmlns = "http://www.w3.org/2000/svg";
+        this.defaultColor = "none";
         
         let elSVG = document.createElementNS(this.xmlns, "svg");
         document.body.appendChild(elSVG);
@@ -168,7 +169,7 @@ class SVG {
     line(x1, y1, x2, y2, color, size) {
         x1 = x1 || 0;   y1 = y1 || 0;
         x2 = x2 || 0;   y2 = y2 || 0;
-        color = color || "none";
+        color = color || this.defaultColor;
         size = size || 1;
         
         this.data.push({
@@ -183,8 +184,8 @@ class SVG {
 
     polyline(coords, bg, strokeColor, strokeWidth) {
         coords = coords || [];
-        bg = bg || "none";
-        strokeColor = strokeColor || "none";
+        bg = bg || this.defaultColor;
+        strokeColor = strokeColor || this.defaultColor;
         strokeWidth = strokeWidth || 1;
 
         if(typeof coords == 'object') {
@@ -208,8 +209,8 @@ class SVG {
 
     circle(x, y, r, bg, strokeColor, strokeWidth) {
         x = x || 0; y = y || 0; r = r || 0;
-        bg = bg || "none";
-        strokeColor = strokeColor || "none";
+        bg = bg || this.defaultColor;
+        strokeColor = strokeColor || this.defaultColor;
         strokeWidth = strokeWidth || 1;
 
         this.data.push({
@@ -228,8 +229,8 @@ class SVG {
     ellipse(x, y, rx, ry, bg, strokeColor, strokeWidth) {
         x = x || 0; rx = rx || 0;
         y = y || 0; ry = ry || 0;
-        bg = bg || "none";
-        strokeColor = strokeColor || "none";
+        bg = bg || this.defaultColor;
+        strokeColor = strokeColor || this.defaultColor;
         strokeWidth = strokeWidth || 1;
         this.data.push({
             type: "ellipse",
@@ -249,8 +250,8 @@ class SVG {
         x = x || 0; y = y || 0;
         startAngle = startAngle || 0;
         endAngle = endAngle || 0;
-        bg = bg || "none";
-        strokeColor = strokeColor || "none";
+        bg = bg || this.defaultColor;
+        strokeColor = strokeColor || this.defaultColor;
         strokeWidth = strokeWidth || 1;
 
         let start = {
@@ -283,8 +284,8 @@ class SVG {
 
     path(d, bg, strokeColor, strokeWidth) {
         d = d || "";
-        bg = bg || "none";
-        strokeColor = strokeColor || "none";
+        bg = bg || this.defaultColor;
+        strokeColor = strokeColor || this.defaultColor;
         strokeWidth = strokeWidth || 1;
 
         this.data.push({
@@ -469,6 +470,10 @@ class SVG {
             ],
             background, strokeColor, strokeWidth
         );
+    }
+
+    setDefaultColor(col) {
+        this.defaultColor = col;
     }
 }
 
