@@ -112,7 +112,7 @@ class SVG {
 
             switch(i.type) {
                 case "line":
-                    setAttributes(newEL, {
+                    setAttributes(newEl, {
                         "x1": i.coord[0],
                         "y1": i.coord[1],
                         "x2": i.coord[2],
