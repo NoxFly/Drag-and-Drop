@@ -19,7 +19,7 @@
  * // possible events: dragmove, pointerup, pointerdown
  * 
  * data:
- * access to current dragging element: $drag.currentDraggingElement
+ * access to current dragging element: $drag.dragging
  *  - .$element: html element
  *  - .isDragging: boolean
  *  - .startingPosition: x and y starting position of the element when document loaded
@@ -42,7 +42,7 @@ class Drag {
     constructor(identificator) {
         this.elements = [];
         this.makeAllDraggable(identificator);
-        this.currentDraggingElement = null;
+        this.dragging = null;
 
         this.events = {
             dragmove: new Event('dragmove'),
@@ -51,11 +51,11 @@ class Drag {
         };
 
         document.addEventListener('mouseup', () => {
-            if(this.currentDraggingElement) this.dragEnd();
+            if(this.dragging) this.dragEnd();
         });
 
         document.addEventListener('mousemove', () => {
-            if(this.currentDraggingElement) this.dragMove();
+            if(this.dragging) this.dragMove();
         });
 
     }
@@ -101,17 +101,17 @@ class Drag {
     }
 
     pointerDown(el) {
-        this.currentDraggingElement = el;
+        this.dragging = el;
         document.body.dispatchEvent(this.events.pointerdown);
 
-        this.currentDraggingElement.dragPoint.x = window.event.clientX - this.currentDraggingElement.relativeStartingPosition.x;
-        this.currentDraggingElement.dragPoint.y = window.event.clientY - this.currentDraggingElement.relativeStartingPosition.y;
+        this.dragging.dragPoint.x = window.event.clientX - this.dragging.relativeStartingPosition.x;
+        this.dragging.dragPoint.y = window.event.clientY - this.dragging.relativeStartingPosition.y;
         
-        this.currentDraggingElement.isDragging = true;
+        this.dragging.isDragging = true;
     }
 
     dragMove() {
-        this.currentDraggingElement.$element.dispatchEvent((this.events.dragmove));
+        this.dragging.$element.dispatchEvent((this.events.dragmove));
 
         this.changeElementPosition(window.event.clientX, window.event.clientY);
         this.updateElement();
@@ -120,11 +120,11 @@ class Drag {
     dragEnd() {
         document.body.dispatchEvent((this.events.pointerup));
 
-        this.currentDraggingElement.relativeStartingPosition.x = this.currentDraggingElement.position.x;
-        this.currentDraggingElement.relativeStartingPosition.y = this.currentDraggingElement.position.y;
+        this.dragging.relativeStartingPosition.x = this.dragging.position.x;
+        this.dragging.relativeStartingPosition.y = this.dragging.position.y;
 
-        this.currentDraggingElement.isDragging = false;
-        this.currentDraggingElement = null;
+        this.dragging.isDragging = false;
+        this.dragging = null;
     }
 
     on(eventType, callback) {
@@ -133,18 +133,18 @@ class Drag {
     }
 
     changeElementPosition(x, y) {
-        this.currentDraggingElement.position.x = x - this.currentDraggingElement.dragPoint.x;
-        this.currentDraggingElement.position.y = y - this.currentDraggingElement.dragPoint.y;
+        this.dragging.position.x = x - this.dragging.dragPoint.x;
+        this.dragging.position.y = y - this.dragging.dragPoint.y;
 
-        this.currentDraggingElement.relativePosition.x = this.currentDraggingElement.position.x - this.currentDraggingElement.startingPosition.x;
-        this.currentDraggingElement.relativePosition.y = this.currentDraggingElement.position.y - this.currentDraggingElement.startingPosition.y;
+        this.dragging.relativePosition.x = this.dragging.position.x - this.dragging.startingPosition.x;
+        this.dragging.relativePosition.y = this.dragging.position.y - this.dragging.startingPosition.y;
     }
 
     updateElement() {
-        var el = this.currentDraggingElement;
+        var el = this.dragging;
         var x = el.position.x - el.startingPosition.x,
             y = el.position.y - el.startingPosition.y;
         
-        this.currentDraggingElement.$element.style.transform = "translate("+x+"px, "+y+"px)";
+        this.dragging.$element.style.transform = "translate("+x+"px, "+y+"px)";
     }
 }
