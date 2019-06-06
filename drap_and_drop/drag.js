@@ -16,7 +16,7 @@
  *    // code
  * });
  * 
- * // possible events: dragstart, dragmove, pointerup, pointerdown
+ * // possible events: dragmove, pointerup, pointerdown
  * 
  * data:
  * access to current dragging element: $drag.currentDraggingElement
@@ -45,9 +45,8 @@ class Drag {
         this.currentDraggingElement = null;
 
         this.events = {
-            dragstart: new Event('dragstart'),
             dragmove: new Event('dragmove'),
-            dragend: new Event('pointerup'),
+            pointerup: new Event('pointerup'),
             pointerdown: new Event('pointerdown')
         };
 
@@ -97,44 +96,35 @@ class Drag {
             }
 
             div.setAttribute('draggable','true');
-            div.addEventListener('dragstart', () => this.dragStart());
-            div.addEventListener('dragmove', () => this.dragMove());
             div.addEventListener('pointerdown', () => this.pointerDown(this.elements[i]));
         }
     }
 
-    dragStart() {
-        var el = this.currentDraggingElement;
-        el.$element.dispatchEvent((this.events.dragstart));
+    pointerDown(el) {
+        this.currentDraggingElement = el;
+        document.body.dispatchEvent(this.events.pointerdown);
 
-        this.currentDraggingElement.dragPoint.x = window.event.clientX - el.relativeStartingPosition.x;
-        this.currentDraggingElement.dragPoint.y = window.event.clientY - el.relativeStartingPosition.y;
+        this.currentDraggingElement.dragPoint.x = window.event.clientX - this.currentDraggingElement.relativeStartingPosition.x;
+        this.currentDraggingElement.dragPoint.y = window.event.clientY - this.currentDraggingElement.relativeStartingPosition.y;
         
         this.currentDraggingElement.isDragging = true;
     }
 
     dragMove() {
-        var el = this.currentDraggingElement;
-        el.$element.dispatchEvent((this.events.dragmove));
+        this.currentDraggingElement.$element.dispatchEvent((this.events.dragmove));
 
         this.changeElementPosition(window.event.clientX, window.event.clientY);
         this.updateElement();
     }
 
     dragEnd() {
-        var el = this.currentDraggingElement;
-        el.$element.dispatchEvent((this.events.dragend));
+        document.body.dispatchEvent((this.events.pointerup));
 
         this.currentDraggingElement.relativeStartingPosition.x = this.currentDraggingElement.position.x;
         this.currentDraggingElement.relativeStartingPosition.y = this.currentDraggingElement.position.y;
 
         this.currentDraggingElement.isDragging = false;
         this.currentDraggingElement = null;
-    }
-
-    pointerDown(el) {
-        el.$element.dispatchEvent(this.events.pointerdown);
-        this.currentDraggingElement = el;
     }
 
     on(eventType, callback) {
