@@ -2,7 +2,7 @@
  * COPYRIGHT NOXFLY 2019
  * DRAG & DROP LIB
  * 
- * link: cdn.jsdelivr.net/gh/NoxFly/tools@master/drap_and_drop/drag.js
+ * link: https://cdn.jsdelivr.net/gh/NoxFly/tools/drap_and_drop/drag.js
  * 
  * HELPED BY: MrJacz: https://github.com/MrJacz
  * 
