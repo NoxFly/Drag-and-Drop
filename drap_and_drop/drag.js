@@ -34,10 +34,10 @@ class Drag {
         this.currentDraggingElement = null;
 
         this.events = {
-            dragStart: new Event('dragStart'),
-            dragMove: new Event('dragMove'),
+            dragStart: new Event('dragstart'),
+            dragMove: new Event('dragmove'),
             dragEnd: new Event('pointerup'),
-            pointerDown: new Event('pointerDown')
+            pointerDown: new Event('pointerdown')
         };
 
         document.addEventListener('mouseup', () => {
