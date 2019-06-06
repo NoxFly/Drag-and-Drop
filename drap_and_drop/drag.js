@@ -34,10 +34,10 @@ class Drag {
         this.currentDraggingElement = null;
 
         this.events = {
-            dragStart: new Event('dragstart'),
-            dragMove: new Event('dragmove'),
-            dragEnd: new Event('pointerup'),
-            pointerDown: new Event('pointerdown')
+            dragstart: new Event('dragstart'),
+            dragmove: new Event('dragmove'),
+            dragend: new Event('pointerup'),
+            pointerdown: new Event('pointerdown')
         };
 
         document.addEventListener('mouseup', () => {
@@ -94,7 +94,7 @@ class Drag {
 
     dragStart() {
         var el = this.currentDraggingElement;
-        el.$element.dispatchEvent((this.events.dragStart));
+        el.$element.dispatchEvent((this.events.dragstart));
 
         this.currentDraggingElement.dragPoint.x = window.event.clientX - el.relativeStartingPosition.x;
         this.currentDraggingElement.dragPoint.y = window.event.clientY - el.relativeStartingPosition.y;
@@ -104,7 +104,7 @@ class Drag {
 
     dragMove() {
         var el = this.currentDraggingElement;
-        el.$element.dispatchEvent((this.events.dragMove));
+        el.$element.dispatchEvent((this.events.dragmove));
 
         this.changeElementPosition(window.event.clientX, window.event.clientY);
         this.updateElement();
@@ -112,7 +112,7 @@ class Drag {
 
     dragEnd() {
         var el = this.currentDraggingElement;
-        el.$element.dispatchEvent((this.events.dragEnd));
+        el.$element.dispatchEvent((this.events.dragend));
 
         this.currentDraggingElement.relativeStartingPosition.x = this.currentDraggingElement.position.x;
         this.currentDraggingElement.relativeStartingPosition.y = this.currentDraggingElement.position.y;
@@ -122,7 +122,7 @@ class Drag {
     }
 
     pointerDown(el) {
-        el.$element.dispatchEvent(this.events.pointerDown);
+        el.$element.dispatchEvent(this.events.pointerdown);
         this.currentDraggingElement = el;
     }
 
