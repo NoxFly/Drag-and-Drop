@@ -2,7 +2,7 @@
  * COPYRIGHT NOXFLY 2019
  * SVG LIB
  * 
- * link: cdn.jsdelivr.net/gh/NoxFly/tools@master/svg/svg.js
+ * link: https://cdn.jsdelivr.net/gh/NoxFly/tools/svg/svg.js
  * 
  * 
  * 
