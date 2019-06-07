@@ -2,7 +2,7 @@
  * COPYRIGHT NOXFLY 2019
  * DRAG & DROP LIB
  * 
- * link: cdn.jsdelivr.net/gh/NoxFly/tools/drap_and_drop/drag.js
+ * link: https://cdn.jsdelivr.net/gh/NoxFly/tools/drap_and_drop/drag.js
  * 
  * HELPED BY: MrJacz: https://github.com/MrJacz
  * 
@@ -11,6 +11,17 @@
  * 
  * var $drag = new Drag('div'); // or .class, #id, ...
  * // from now on, all elements will be draggable
+ * 
+ * options:
+ *  - grid: [x, y]
+ *  - axis: 'x' || 'y'
+ *  - containment: '.container' || '#container' || 'container'
+ * 
+ * multiple options is possible
+ * 
+ * var $drag = new Drag('.draggable', {
+ *     // options
+ * });
  * 
  * $drag.on('event', function() {
  *    // code
@@ -25,7 +36,7 @@
  *  - .startingPosition: x and y starting position of the element when document loaded
  *  - .relativeStartingPosition: x and y position of the element when last drag start
  *  - .position: x and y current position of the element
- *  - . relativePosition: x and y current position of the element compared to relativeStartingPosition
+ *  - .relativePosition: x and y current position of the element compared to relativeStartingPosition
  *  - .width: width of the element (shortcut)
  *  - .height: height of the element (shortcut)
  * 
@@ -34,8 +45,6 @@
  *      - destroy()
  *      - disable()
  * 
- * -> add new events
- * -> add new constructor's options: grid, horizontal, vertical, container
  */
 
 class Drag {
@@ -50,11 +59,11 @@ class Drag {
             pointerdown: new Event('pointerdown')
         };
 
-        document.addEventListener('mouseup', () => {
+        document.addEventListener('mouseup touchend', () => {
             if(this.dragging) this.dragEnd();
         });
 
-        document.addEventListener('mousemove', () => {
+        document.addEventListener('mousemove touchmove', () => {
             if(this.dragging) this.dragMove();
         });
 
@@ -90,7 +99,7 @@ class Drag {
                 height: div.clientHeight
             };
 
-            div.addEventListener('pointerdown', () => this.pointerDown(this.elements[i]));
+            div.addEventListener('pointerdown touchstart', () => this.pointerDown(this.elements[i]));
         }
     }
 
