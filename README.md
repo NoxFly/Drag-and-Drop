@@ -14,7 +14,7 @@ It use `transform: translate();` css property, so if you set a new transform pro
 
 other cool library: [SVG library](http://github.com/NoxFly/SVG)
 
-### Usage
+## Usage
 
 ```js
 var drag = new Drag('elem'); // elem can be .class, #id or tag name
@@ -35,7 +35,7 @@ var drags = {
 };
 ```
 
-### Options
+## Options
 
 ```js
 // possible options: axis, grid, container
@@ -48,7 +48,7 @@ var drag = new Drag('elem', {
 });
 ```
 
-### Listeners
+## Listeners
 
 ```js
 // possible event: dragmove, pointerup, pointerdown
@@ -57,7 +57,7 @@ drag.on('event', () => { // function() {}
 });
 ```
 
-### Access to dragging element
+## Access to dragging element
 
 ```js
 drag.dragging = {

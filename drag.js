@@ -6,40 +6,6 @@
  * 
  * HELPED BY: MrJacz: https://github.com/MrJacz
  * 
- * 
- * 
- * 
- * var $drag = new Drag('div'); // or .class, #id, ...
- * // from now on, all elements will be draggable
- * 
- * options:
- *  - grid: [x, y]
- *  - axis: 'x' || 'y'
- *  - containment: '.container' || '#container' || 'container'
- * 
- * multiple options is possible
- * 
- * var $drag = new Drag('.draggable', {
- *     // options
- * });
- * 
- * $drag.on('event', function() {
- *    // code
- * });
- * 
- * // possible events: dragmove, pointerup, pointerdown
- * 
- * data:
- * access to current dragging element: $drag.dragging
- *  - .$element: html element
- *  - .isDragging: boolean
- *  - .startingPosition: x and y starting position of the element when document loaded
- *  - .relativeStartingPosition: x and y position of the element when last drag start
- *  - .position: x and y current position of the element
- *  - .relativePosition: x and y current position of the element compared to relativeStartingPosition
- *  - .width: width of the element (shortcut)
- *  - .height: height of the element (shortcut)
- * 
  * next updates: 
  * -> add new methods, like:
  *      - destroy()
