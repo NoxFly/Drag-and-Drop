@@ -2,7 +2,7 @@
 
 ### current CDN link:
 ```js
-<script src='https://cdn.jsdelivr.net/gh/NoxFly/drap_and_drop/drag.min.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/NoxFly/Drag-and-Drop/drag.min.js'></script>
 ```
 
 I'll add it on npm and unpkg soon.
