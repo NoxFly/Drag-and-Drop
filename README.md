@@ -57,6 +57,15 @@ drag.on('event', () => { // function() {}
 });
 ```
 
+Know if there is current dragging element :
+
+```js
+// null if there is not
+if(drag.dragging) {
+    // code
+}
+```
+
 ## Access to dragging element
 
 ```js
