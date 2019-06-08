@@ -5,7 +5,11 @@
 <script src='https://cdn.jsdelivr.net/gh/NoxFly/Drag-and-Drop/drag.min.js'></script>
 ```
 
-I'll add it on npm and unpkg soon.
+### NPM
+
+[NPM drag'n drop](https://www.npmjs.com/package/@noxfly/drag-and-drop)
+
+install on npm : `npm i @noxfly/drag-and-drop`
 
 **Works without Jquery**
 **Works on phones**

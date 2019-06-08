@@ -1,0 +1,23 @@
+{
+  "name": "@noxfly/drag-and-drop",
+  "version": "1.0.0",
+  "description": "Drag and Drop element of your page easily",
+  "main": "drag.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoxFly/Drag-and-Drop.git"
+  },
+  "keywords": [
+    "npm",
+    "npm-drag-and-drop"
+  ],
+  "author": "NoxFly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NoxFly/Drag-and-Drop/issues"
+  },
+  "homepage": "https://github.com/NoxFly/Drag-and-Drop#readme"
+}
