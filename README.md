@@ -83,12 +83,12 @@ drag.dragging = {
         y:      // current Y position of element while dragging - relative to the last drop position
     },
     startingPosition: {
-        x: ,    // X position of element while dragging - relative to the page
-        y:      // Y position of element while dragging - relative to the page
+        x: ,    // X position of dragging element before the drag - relative to the page
+        y:      // Y position of dragging element before the drag - relative to the page
     },
     relativeStartingPosition: {
-        x: ,    // X position of element while dragging - relative to the last drop position
-        y:      // Y position of element while dragging - relative to the last drop position
+        x: ,    // X position of dragging element before the drag - relative to the last drop position
+        y:      // Y position of dragging element before the drag - relative to the last drop position
     }
 }
 ```
