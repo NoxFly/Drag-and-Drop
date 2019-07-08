@@ -25,11 +25,11 @@ class Drag {
             pointerdown: new Event('pointerdown')
         };
 
-        document.addEventListener('mouseup touchend', () => {
+        document.addEventListener('mouseup', () => {
             if(this.dragging) this.dragEnd();
         });
 
-        document.addEventListener('mousemove touchmove', () => {
+        document.addEventListener('mousemove', () => {
             if(this.dragging) this.dragMove();
         });
 
@@ -39,7 +39,7 @@ class Drag {
                 (options.containment && typeof options.containment==='string' && document.querySelector(options.containment)) && (this.containment = options.containment);
                 (options.axis && ['x','y'].indexOf(options.axis)>-1) && (this.axis = options.axis);
             } else {
-                console.warn('options parameter must be object');
+                console.warn('the options parameter must be an object');
             }
             if(this.containment) this.getContainmentCoord();
         }
@@ -65,7 +65,7 @@ class Drag {
                 height: div.clientHeight
             };
 
-            div.addEventListener('pointerdown touchstart', () => this.pointerDown(this.elements[i]));
+            div.addEventListener('pointerdown', () => this.pointerDown(this.elements[i]));
         }
     }
 
