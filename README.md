@@ -11,8 +11,9 @@
 
 install on npm : `npm i @noxfly/drag-and-drop`
 
-**Works without Jquery**
-**Works on phones**
+* **Works without Jquery**
+
+* **Works on phones**
 
 It use `transform: translate();` css property, so if you set a new transform property, element cannot be dragged.
 
