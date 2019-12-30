@@ -100,4 +100,6 @@ drag.dragging = {
 }
 ```
 
-Next updates will add more possibilities
+## License
+
+This repo has the GPL-3.0 license. See the [LICENSE.txt](https://github.com/NoxFly/Drag-and-Drop/blob/master/LICENSE.txt).

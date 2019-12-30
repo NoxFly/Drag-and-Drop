@@ -1,5 +1,7 @@
 /**
- * COPYRIGHT NOXFLY 2019
+ * @copyright   Copyright (C) 2019 - 2020 Dorian Thivolle All rights reserved.
+ * @license     GNU General Public License version 3 or later; see LICENSE.txt
+ * 
  * DRAG & DROP LIB
  * 
  * link: https://cdn.jsdelivr.net/gh/NoxFly/Drag-and-Drop/drag.js
@@ -48,7 +50,7 @@ class Drag {
     makeAllDraggable(identificator) {
         const divs = document.querySelectorAll(identificator);
 
-        for (let i = 0; i < divs.length; i++) {
+        for(let i = 0; i < divs.length; i++) {
             const div = divs[i];
             const divX = div.getBoundingClientRect().x,
                   divY = div.getBoundingClientRect().y;
